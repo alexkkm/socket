@@ -25,7 +25,7 @@ io.on('connection', function (socket) {
     // Use socket to communicate with this particular client only, sending it it's own id
     socket.emit('welcome', { message: 'Welcome!', id: socket.id });
 
-    socket.on('i am client', console.log);
+    socket.on('I am client', console.log);
 });
 
 app.listen(3000);
