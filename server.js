@@ -25,7 +25,16 @@ io.on('connection', function (socket) {
     socket.emit('welcome', { message: 'Welcome!', id: socket.id });
     // Listen on the message from client with the title: "joinned"
     socket.on('joinned', console.log);
-});
+
+    // when the user disconnects.. perform this
+    socket.on('disconnect', () => {
+        // Emit a message globally that one client has left
+        socket.broadcast.emit('message',
+            { message: 'One user left!' }
+        );
+        console.log("One user left!")
+    });
+})
 
 // Send current time to all connected clients
 function sendTime() {
