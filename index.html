@@ -15,15 +15,15 @@
                 document.getElementById("userID").innerHTML=userID;
 
                 // Display the "welcome" message
-                createMessageElement(data.message);
+                createCheeringMessageElement(data.message);
                 // Respond with emitting a message including this clients' id ,while this id is sent from the server
                 socket.emit('joinned', {type: "system", data: "New user has been joinned", userId: data.userId});
             });
 
             // When the server emit a message 'time', run createMessageElement function 
             socket.on('time', function(data) {
-                //-- createMessageElement(data.time);
-                editElement(data.time)
+                //-- createCheeringMessageElementdata.time);
+                updateTimeElement(data.time)
             });
             // Once receive 'error' message, console log the message
             socket.on('error', console.error.bind(console));
@@ -31,33 +31,36 @@
             socket.on('message', console.log.bind(console));
 
             // Add the content into a new created html element 
-            function createMessageElement(message) {
-                var text = document.createTextNode(message),
-                    element = document.createElement('p'),
-                    messages = document.getElementById('messages');
-                    element.appendChild(text);
-                messages.appendChild(element);
+            function createCheeringMessageElement(message) {
+                var text = document.createTextNode(message);
+                var element = document.createElement('p');
+                var targetElement = document.getElementById('cheering');
+                element.appendChild(text);
+                targetElement.appendChild(element);
             }
 
-            // Edit the element content
-            function editElement(message) {
+            // Edit the time element content
+            function updateTimeElement(message) {
                 var text = document.createTextNode(message),
                     element = document.getElementById('time')
                 element.innerHTML=message;
             }
-
-            var input;
-            // Update the "display" element with the content of the input "inputMessage"
+            
+            /// Input Field Functions:
+            var input;  // define a variable that store the data in input field
+            // Function that update the "display" element with the content of the input "inputMessage"
             var editInput = ()=>{
                 input = document.getElementById("inputMessage").value;
                 //
                 document.getElementById("display").innerHTML=input;
             }
-            // Emit a message to the server with the content of "inputMessage"
+            // Function that emit a message to the server with the content of "inputMessage"
             var submitMessage=()=>{
                 content = document.getElementById("inputMessage").value;
                 socket.emit('message',{type: "message", data: content, sender: userID});
             }
+            ///
+
         </script>
     </head>
 
@@ -66,7 +69,7 @@
            
         </script>
 
-        <div id='messages'>
+        <div id='cheering'>
         </div>
 
         <p>User ID: </p>
@@ -77,7 +80,7 @@
 
         <input id="inputMessage" type="text" onchange="editInput()">
         <button id="submitButton" onclick="submitMessage()" >Submit Message</button>
-        <p>Output: </p>
+        <p>You have sent: </p>
         <p id="display"></p>
     </body>
 </html>

@@ -54,7 +54,13 @@ io.on('connection', function (socket) {
     });
 
     // Listen on and display when receiving the message from client with the title: "message"
-    socket.on('message', console.log)
+    socket.on('message', function (data) {
+        // Emit a message globally that message
+        //! this part not working
+        socket.broadcast.emit('update', data);
+        // Display message
+        console.log(data)
+    });
 
     // when the user disconnects, perform the followings:
     socket.on('disconnect', () => {
