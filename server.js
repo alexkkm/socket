@@ -1,12 +1,30 @@
-// Import http and fs modules
+// Import http and file system modules
 var http = require('http'),
     fs = require('fs'),
     //* NEVER use a Sync function except at start-up!
+    // Use fs module to read the index.html and label it as index
     index = fs.readFileSync(__dirname + '/index.html');
 
-// Create a http server and send index.html to all requests
+// //OR can perform error handling when reading 'index.html'
+/* index = fs.readFileSync(__dirname + '/index.html', 
+    function(error,data){
+        if (error){
+            response.writeHead(404);
+            response.write("opps this doesn't exist - 404");
+        } else{
+            response.writeHead(200, {"Content-Type": "text/html"});
+            response.write(data, "utf8");
+        }
+);
+*/
+
+// Create a http server, and
+// the function declared that, when the server receive request, then response the following
 var app = http.createServer(function (req, res) {
+    // set the http response header to be:
+    // status code: 200 , content type: html
     res.writeHead(200, { 'Content-Type': 'text/html' });
+    // end the response header declaration
     res.end(index);
 });
 
@@ -19,35 +37,46 @@ app.listen(3000, () => {
 });
 
 
-// When the user connects the server, perform this:
+// When the user connects the server, perform the followings:
 io.on('connection', function (socket) {
-    // Emit a message with title: 'welcome', sending it it's own id
-    socket.emit('welcome', { type: "system", message: 'Welcome!', id: socket.id });
-    // Listen on the message from client with the title: "joinned"
-    socket.on('joinned', console.log);
 
+    // Emit a message with title: 'welcome', sending the data which contains the user's own id
+    socket.emit('welcome', { type: "system", message: 'Welcome!', userId: socket.id });
 
-    //
-    socket.on('message', console.log)
-
-    // when the user disconnects.. perform this
-    socket.on('disconnect', () => {
+    // Listen on and display when receiving the message from client with the title: "joinned"
+    socket.on('joinned', function (data) {
         // Emit a message globally that one client has left
         socket.broadcast.emit('message',
             { type: "system", message: 'One user left!' }
         );
-        console.log("One user left!")
+        // Display message: "userID has been joinned"
+        console.log(data.userId + " has been joinned")
+    });
+
+    // Listen on and display when receiving the message from client with the title: "message"
+    socket.on('message', console.log)
+
+    // when the user disconnects, perform the followings:
+    socket.on('disconnect', () => {
+        // Emit a message globally that one client has left
+        socket.broadcast.emit('message',
+            { type: "system", message: 'One user has been left!' }
+        );
+        // Display message: "one user left"
+        console.log('One user has been left!')
     });
 })
 
 // Send current time to all connected clients
 function sendTime() {
-    var date = new Date(); // get the current time
+    // Get the current time
+    var date = new Date();
+    // Reformatting the date into time, Hour:Min:Second
     var timetext = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    // Emit the current time to client
     io.emit('time', { type: 'information', time: timetext });
-
 }
 
-// Send current time every 10 secs
+// Send current time every 1 secs
 setInterval(sendTime, 1000);
 
