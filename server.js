@@ -1,4 +1,4 @@
-// import http and fs modules
+// Import http and fs modules
 var http = require('http'),
     fs = require('fs'),
     //* NEVER use a Sync function except at start-up!
@@ -13,7 +13,7 @@ var app = http.createServer(function (req, res) {
 // Socket.io server listens to our app
 var io = require('socket.io')(app);
 
-// bind the server and listen to 3000 port, and give a notice on console log
+// Bind the server and listen to 3000 port, and give a notice on console log
 app.listen(3000, () => {
     console.log('Server listening on port 3000')
 });
@@ -29,7 +29,10 @@ io.on('connection', function (socket) {
 
 // Send current time to all connected clients
 function sendTime() {
-    io.emit('time', { time: new Date().toJSON() });
+    var date = new Date(); // get the current time
+    var timetext = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    io.emit('time', { time: timetext });
+
 }
 
 // Send current time every 10 secs

@@ -1,22 +1,23 @@
 <!doctype html>
 <html>
     <head>
-        <!-- import the socket.io -->
+        <!-- Import the socket.io -->
         <script src='/socket.io/socket.io.js'></script>
         <script>
             var socket = io();
             
             // Listen on the message from server with the title of 'welcome'
             socket.on('welcome', function(data) {
-                displayMessage(data.message);
+                createMessageElement(data.message);
 
                 // Respond with emitting a message including this clients' id ,while this id is sent from the server
                 socket.emit('joinned', {data: "New user has been joinned", id: data.id});
             });
 
-            // When the server emit a message 'time', run displayMessage function 
+            // When the server emit a message 'time', run createMessageElement function 
             socket.on('time', function(data) {
-                displayMessage(data.time);
+                //-- createMessageElement(data.time);
+                editElement(data.time)
             });
             // Once receive 'error' message, console log the message
             socket.on('error', console.error.bind(console));
@@ -24,17 +25,28 @@
             socket.on('message', console.log.bind(console));
 
             // Add the content into a new created html element 
-            function displayMessage(message) {
+            function createMessageElement(message) {
                 var text = document.createTextNode(message),
                     element = document.createElement('p'),
                     messages = document.getElementById('messages');
-
                     element.appendChild(text);
                 messages.appendChild(element);
             }
+
+            // Edit the element content
+            function editElement(message) {
+                var text = document.createTextNode(message),
+                    element = document.getElementById('time')
+                element.innerHTML=message;
+            }
         </script>
     </head>
+
     <body>
-        <div id='messages'></div>
+        <div id='messages'>
+        </div>
+        
+        <p>Present Time: </p>
+        <p id="time"></p>
     </body>
 </html>
