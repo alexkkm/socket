@@ -5,30 +5,36 @@
         <script src='/socket.io/socket.io.js'></script>
         <script>
             var socket = io();
-
+            
+            // Listen on the message from server with the title of 'welcome'
             socket.on('welcome', function(data) {
-                addMessage(data.message);
+                displayMessage(data.message);
 
-                // Respond with a message including this clients' id sent from the server
-                socket.emit('I am client', {data: 'foo!', id: data.id});
+                // Respond with emitting a message including this clients' id ,while this id is sent from the server
+                socket.emit('joinned', {data: "New user has been joinned", id: data.id});
             });
+
+            // When the server emit a message 'time', run displayMessage function 
             socket.on('time', function(data) {
-                addMessage(data.time);
+                displayMessage(data.time);
             });
+            // Once receive 'error' message, console log the message
             socket.on('error', console.error.bind(console));
+            // Once receive 'message' message, console log the message
             socket.on('message', console.log.bind(console));
 
-            function addMessage(message) {
+            // Add the content into a new created html element 
+            function displayMessage(message) {
                 var text = document.createTextNode(message),
-                    el = document.createElement('li'),
+                    element = document.createElement('p'),
                     messages = document.getElementById('messages');
 
-                el.appendChild(text);
-                messages.appendChild(el);
+                    element.appendChild(text);
+                messages.appendChild(element);
             }
         </script>
     </head>
     <body>
-        <ul id='messages'></ul>
+        <div id='messages'></div>
     </body>
 </html>
