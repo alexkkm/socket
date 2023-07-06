@@ -5,11 +5,17 @@
         <script src='/socket.io/socket.io.js'></script>
         <script>
             var socket = io();
+            var userID;
             
             // Listen on the message from server with the title of 'welcome'
             socket.on('welcome', function(data) {
-                createMessageElement(data.message);
 
+                // Update userID when connected
+                userID=data.id;
+                document.getElementById("userID").innerHTML=userID;
+
+                // Display the "welcome" message
+                createMessageElement(data.message);
                 // Respond with emitting a message including this clients' id ,while this id is sent from the server
                 socket.emit('joinned', {data: "New user has been joinned", id: data.id});
             });
@@ -39,11 +45,7 @@
                     element = document.getElementById('time')
                 element.innerHTML=message;
             }
-        </script>
-    </head>
 
-    <body>
-        <script>
             var input;
             // Update the "display" element with the content of the input "inputMessage"
             var editInput = ()=>{
@@ -54,12 +56,21 @@
             // Emit a message to the server with the content of "inputMessage"
             var submitMessage=()=>{
                 content = document.getElementById("inputMessage").value;
-                socket.emit('message',{data:content});
+                socket.emit('message',{data: content, sender: userID});
             }
+        </script>
+    </head>
+
+    <body>
+        <script>
+           
         </script>
 
         <div id='messages'>
         </div>
+
+        <p>User ID: </p>
+        <p id="userID">Unknown ID</p>
         
         <p>Present Time: </p>
         <p id="time"></p>
