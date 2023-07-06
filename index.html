@@ -17,7 +17,7 @@
                 // Display the "welcome" message
                 createMessageElement(data.message);
                 // Respond with emitting a message including this clients' id ,while this id is sent from the server
-                socket.emit('joinned', {data: "New user has been joinned", id: data.id});
+                socket.emit('joinned', {type: "system", data: "New user has been joinned", id: data.id});
             });
 
             // When the server emit a message 'time', run createMessageElement function 
@@ -56,7 +56,7 @@
             // Emit a message to the server with the content of "inputMessage"
             var submitMessage=()=>{
                 content = document.getElementById("inputMessage").value;
-                socket.emit('message',{data: content, sender: userID});
+                socket.emit('message',{type: "message", data: content, sender: userID});
             }
         </script>
     </head>

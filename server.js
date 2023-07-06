@@ -22,7 +22,7 @@ app.listen(3000, () => {
 // When the user connects the server, perform this:
 io.on('connection', function (socket) {
     // Emit a message with title: 'welcome', sending it it's own id
-    socket.emit('welcome', { message: 'Welcome!', id: socket.id });
+    socket.emit('welcome', { type: "system", message: 'Welcome!', id: socket.id });
     // Listen on the message from client with the title: "joinned"
     socket.on('joinned', console.log);
 
@@ -34,7 +34,7 @@ io.on('connection', function (socket) {
     socket.on('disconnect', () => {
         // Emit a message globally that one client has left
         socket.broadcast.emit('message',
-            { message: 'One user left!' }
+            { type: "system", message: 'One user left!' }
         );
         console.log("One user left!")
     });
@@ -44,7 +44,7 @@ io.on('connection', function (socket) {
 function sendTime() {
     var date = new Date(); // get the current time
     var timetext = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-    io.emit('time', { time: timetext });
+    io.emit('time', { type: 'information', time: timetext });
 
 }
 
