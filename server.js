@@ -26,6 +26,10 @@ io.on('connection', function (socket) {
     // Listen on the message from client with the title: "joinned"
     socket.on('joinned', console.log);
 
+
+    //
+    socket.on('message', console.log)
+
     // when the user disconnects.. perform this
     socket.on('disconnect', () => {
         // Emit a message globally that one client has left

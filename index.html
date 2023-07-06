@@ -43,11 +43,30 @@
     </head>
 
     <body>
+        <script>
+            var input;
+            // Update the "display" element with the content of the input "inputMessage"
+            var editInput = ()=>{
+                input = document.getElementById("inputMessage").value;
+                //
+                document.getElementById("display").innerHTML=input;
+            }
+            // Emit a message to the server with the content of "inputMessage"
+            var submitMessage=()=>{
+                content = document.getElementById("inputMessage").value;
+                socket.emit('message',{data:content});
+            }
+        </script>
+
         <div id='messages'>
         </div>
         
         <p>Present Time: </p>
         <p id="time"></p>
 
+        <input id="inputMessage" type="text" onchange="editInput()">
+        <button id="submitButton" onclick="submitMessage()" >Submit Message</button>
+        <p>Output: </p>
+        <p id="display"></p>
     </body>
 </html>
