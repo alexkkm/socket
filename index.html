@@ -20,10 +20,10 @@
                 socket.emit('joinned', {type: "system", data: "New user has been joinned", userId: data.userId});
             });
 
-            // When the server emit a message 'time', run createMessageElement function 
+            // When the server emit a message 'time', run editTime function 
             socket.on('time', function(data) {
-                //-- createCheeringMessageElementdata.time);
-                updateTimeElement(data.time)
+                //-- createMessageElement(data.time);
+                editTime(data.time)
             });
             // Once receive 'error' message, console log the message
             socket.on('error', console.error.bind(console));
@@ -39,8 +39,8 @@
                 targetElement.appendChild(element);
             }
 
-            // Edit the time element content
-            function updateTimeElement(message) {
+            // Edit the element content
+            function editTime(message) {
                 var text = document.createTextNode(message),
                     element = document.getElementById('time')
                 element.innerHTML=message;
