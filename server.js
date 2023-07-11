@@ -20,7 +20,7 @@ var http = require('http'),
 
 // Create a http server, and
 // the function declared that, when the server receive request, then response the following
-var app = http.createServer(function (req, res) {
+var httpServer = http.createServer(function (req, res) {
     // set the http response header to be:
     // status code: 200 , content type: html
     res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -28,11 +28,11 @@ var app = http.createServer(function (req, res) {
     res.end(index);
 });
 
-// Socket.io server listens to our app
-var io = require('socket.io')(app);
+// Socket.io server listens to our httpServer
+var io = require('socket.io')(httpServer);
 
 // Bind the server and listen to 3000 port, and give a notice on console log
-app.listen(3000, () => {
+httpServer.listen(3000, () => {
     console.log('Server listening on port 3000')
 });
 
